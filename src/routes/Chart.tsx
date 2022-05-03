@@ -17,6 +17,10 @@ interface IHistorical {
 interface ChartProps {
   coinId: string;
 }
+interface ohlc {
+  x: string;
+  y: [string];
+}
 
 function Chart() {
   const { coinId } = useOutletContext<ChartProps>();
@@ -25,17 +29,26 @@ function Chart() {
     () => fetchCoinHistory(coinId),
     { refetchInterval: 10000 }
   );
+  const ohlcData = data?.map((price) => ({
+    x: price.time_open,
+    y: [
+      price.open.toFixed(4),
+      price.high.toFixed(4),
+      price.low.toFixed(4),
+      price.close.toFixed(4),
+    ],
+  }));
   return (
     <div>
       {isLoading ? (
         "Loading..."
       ) : (
         <ApexChart
-          type="line"
+          type="candlestick"
           series={[
             {
               name: "Price",
-              data: data?.map((price) => price.close) ?? [],
+              data: ohlcData as Array<ohlc>,
             },
           ]}
           options={{
@@ -61,36 +74,13 @@ function Chart() {
                 enabled: false,
               },
             },
-            grid: {
-              show: false,
-            },
-            stroke: {
-              show: true,
-              curve: "smooth",
-              width: 3,
-            },
-            colors: ["#0fbcf9"],
-            fill: {
-              type: "gradient",
-              gradient: {
-                gradientToColors: ["#0be881"],
-                stops: [0, 100],
-              },
-            },
-            tooltip: {
-              y: {
-                formatter: (value) => `$${value.toFixed(4)}`,
-              },
+            xaxis: {
+              type: "datetime",
             },
             yaxis: {
-              show: false,
-            },
-            xaxis: {
-              axisBorder: { show: false },
-              axisTicks: { show: false },
-              labels: { show: false },
-              type: "datetime",
-              categories: data?.map((price) => price.time_close),
+              tooltip: {
+                enabled: true,
+              },
             },
           }}
         />
