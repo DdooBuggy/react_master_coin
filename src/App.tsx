@@ -3,10 +3,9 @@ import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./theme";
-import styled from "styled-components";
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { solid, light } from "@fortawesome/fontawesome-svg-core/import.macro";
+
+import { useRecoilValue } from "recoil";
+import { isDarkAtom } from "./atoms";
 
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -74,39 +73,13 @@ a {
   color: inherit;
 }
 `;
-const ThemeBox = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: end;
-  margin-top: 20px;
-  padding: 0 20px;
-`;
-const ThemeBtn = styled.div`
-  color: black;
-  font-size: 20px;
-  background-color: transparent;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
-  const toggleTheme = () => setIsDark((current) => !current);
+  const isDark = useRecoilValue(isDarkAtom);
   return (
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <GlobalStyle />
-        <ThemeBox>
-          <ThemeBtn onClick={toggleTheme}>
-            {isDark ? (
-              <FontAwesomeIcon icon={solid("moon")} />
-            ) : (
-              <FontAwesomeIcon icon={solid("sun")} />
-            )}
-          </ThemeBtn>
-        </ThemeBox>
         <Router isDark={isDark} />
         <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>

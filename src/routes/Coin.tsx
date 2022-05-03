@@ -6,6 +6,8 @@ import { Helmet } from "react-helmet";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isDarkAtom } from "../atoms";
 
 // components
 const Container = styled.div`
@@ -27,11 +29,6 @@ const Title = styled.h1`
 const Loader = styled.span`
   text-align: center;
   display: block;
-`;
-const BackBtn = styled.div`
-  display: flex;
-  width: 100%;
-  font-size: 20px;
 `;
 
 const Tabs = styled.div`
@@ -84,6 +81,23 @@ const Description = styled.p`
   text-align: justify;
   text-indent: 2em;
   line-height: 1.4;
+`;
+
+const Nav = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 0 20px;
+`;
+const ThemeBtn = styled.div`
+  color: black;
+  font-size: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 // type def
@@ -152,7 +166,9 @@ function Coin() {
   const name = (useLocation().state as RouteState)?.name;
   const priceMatch = useMatch("/:coinId/price");
   const chartMatch = useMatch("/:coinId/chart");
-
+  const isDark = useRecoilValue(isDarkAtom);
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
     ["info", coinId],
     () => fetchCoinInfo(coinId ? coinId : "")
@@ -169,11 +185,18 @@ function Coin() {
         <title>{name ? name : loading ? "Loading..." : infoData?.name}</title>
       </Helmet>
       <Header>
-        <BackBtn>
+        <Nav>
           <Link to={"/"}>
             <FontAwesomeIcon icon={solid("arrow-left-long")} />
           </Link>
-        </BackBtn>
+          <ThemeBtn onClick={toggleDarkAtom}>
+            {isDark ? (
+              <FontAwesomeIcon icon={solid("moon")} />
+            ) : (
+              <FontAwesomeIcon icon={solid("sun")} />
+            )}
+          </ThemeBtn>
+        </Nav>
         <Title>{name ? name : loading ? "Loading..." : infoData?.name}</Title>
       </Header>
       {loading ? (
