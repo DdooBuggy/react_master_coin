@@ -21,8 +21,11 @@ interface ohlc {
   x: string;
   y: [string];
 }
+interface routerProps {
+  isDark: boolean;
+}
 
-function Chart() {
+function Chart({ isDark }: routerProps) {
   const { coinId } = useOutletContext<ChartProps>();
   const { isLoading, data } = useQuery<IHistorical[]>(
     ["ohlcv", coinId],
@@ -53,7 +56,7 @@ function Chart() {
           ]}
           options={{
             theme: {
-              mode: "dark",
+              mode: isDark ? "dark" : "light",
             },
             dataLabels: {
               enabled: false,

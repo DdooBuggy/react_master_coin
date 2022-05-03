@@ -9,16 +9,15 @@ import { fetchCoinInfo, fetchCoinTickers } from "../api";
 
 // components
 const Container = styled.div`
-  padding: 0px 20px;
-  max-width: 480px;
+  width: 450px;
   margin: 0 auto;
 `;
 const Header = styled.header`
-  height: 15vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 50px;
 `;
 const Title = styled.h1`
   font-size: 50px;
@@ -46,7 +45,7 @@ const Tab = styled.span<{ isActive: boolean }>`
   text-transform: uppercase;
   font-size: 15px;
   font-weight: 600;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.boxColor};
   padding: 7px 0px;
   border-radius: 10px;
   color: ${(props) =>
@@ -60,7 +59,7 @@ const Tab = styled.span<{ isActive: boolean }>`
 const Overview = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: ${(props) => props.theme.boxColor};
   padding: 10px 20px;
   border-radius: 10px;
 `;

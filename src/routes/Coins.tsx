@@ -5,25 +5,24 @@ import { Helmet } from "react-helmet";
 import { fetchCoins } from "../api";
 
 const Container = styled.div`
-  padding: 0px 20px;
-  max-width: 480px;
+  width: 450px;
   margin: 0 auto;
 `;
 
 const Header = styled.header`
-  height: 15vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 50px;
 `;
 
 const CoinsList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: #f1f2f6;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.boxColor};
   border-radius: 15px;
   margin-bottom: 10px;
+  border: 1px solid ${(props) => props.theme.accentColor};
   a {
     display: flex;
     align-items: center;
