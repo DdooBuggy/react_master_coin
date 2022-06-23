@@ -4,6 +4,7 @@ import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
 import { isDarkAtom } from "../atoms";
 import { useRecoilValue } from "recoil";
+import { useEffect, useState } from "react";
 
 interface IHistorical {
   time_open: string;
@@ -21,7 +22,7 @@ interface ChartProps {
 }
 interface ohlc {
   x: string;
-  y: [string];
+  y: string[];
 }
 interface IChartProps {}
 
@@ -32,20 +33,30 @@ function Chart({}: IChartProps) {
     () => fetchCoinHistory(coinId),
     { refetchInterval: 10000 }
   );
-  const ohlcData = data?.map((price) => ({
-    x: price.time_open,
-    y: [
-      price.open.toFixed(4),
-      price.high.toFixed(4),
-      price.low.toFixed(4),
-      price.close.toFixed(4),
-    ],
-  }));
+  const [ohlcData, setOhlcData] = useState<ohlc[]>([]);
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setOhlcData(
+        data?.map((price) => ({
+          x: price.time_open,
+          y: [
+            price.open.toFixed(4),
+            price.high.toFixed(4),
+            price.low.toFixed(4),
+            price.close.toFixed(4),
+          ],
+        }))
+      );
+    }
+  }, [data]);
+  console.log(ohlcData);
   const isDark = useRecoilValue(isDarkAtom);
   return (
     <div>
       {isLoading ? (
         "Loading..."
+      ) : ohlcData.length === 0 ? (
+        "Oops! error happens"
       ) : (
         <ApexChart
           type="candlestick"
